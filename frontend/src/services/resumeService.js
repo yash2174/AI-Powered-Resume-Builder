@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:7000/api/resume';
+const API_URL = 'https://ai-powered-resume-builder-5uwq.onrender.com';
 
 export const resumeService = {
   getResume: async (token) => {

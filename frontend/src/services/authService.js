@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:7000/api/auth'; // backend URL
+const API_URL = 'https://ai-powered-resume-builder-5uwq.onrender.com'; // backend URL
 
 export const authService = {
   login: async (email, password) => {
