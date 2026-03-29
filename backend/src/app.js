@@ -14,8 +14,9 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://ai-powered-resume-builder-5uwq.onrender.com"
+    "https://ai-powered-resume-builder-hazel.vercel.app"
   ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
