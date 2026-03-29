@@ -185,7 +185,7 @@ const ResumeAnalyzer = () => {
                       </p>
                       <p className="text-sm text-gray-400 mt-1">or <span className="text-violet-600 font-semibold">browse files</span></p>
                     </div>
-                    <p className="text-xs text-gray-300">Supports PDF, DOC, DOCX</p>
+                    <p className="text-xs text-gray-500">Supports PDF, DOC, DOCX</p>
                   </div>
                 )}
               </div>
