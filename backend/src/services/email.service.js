@@ -1,28 +1,27 @@
-import axios from "axios";
-import dotenv from "dotenv";
+import SibApiV3Sdk from "sib-api-v3-sdk";
 
-dotenv.config();
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications["api-key"];
 
-console.log("BREVO URL:", process.env.BREVO_API_URL);
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
-const BREVO_API_URL = process.env.BREVO_API_URL;
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-const headers = {
-  "api-key": process.env.BREVO_API_KEY,
-  "Content-Type": "application/json",
-};
 
+// ✅ SEND OTP EMAIL
 export const sendOTPEmail = async (email, otp) => {
-  await axios.post(
-    BREVO_API_URL,
-    {
-      sender: {
-        name: "AI Resume Builder",
-        email: "yashpaithane2004@gmail.com",
-      },
-      to: [{ email }],
-      subject: "Your OTP Verification Code",
-      htmlContent: `
+  try {
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+    sendSmtpEmail.to = [{ email }];
+    sendSmtpEmail.sender = {
+      email: "yashpaithane2004@gmail.com", // must be verified
+      name: "AI Resume Builder",
+    };
+
+    sendSmtpEmail.subject = "Your OTP Verification Code";
+
+    sendSmtpEmail.htmlContent = `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -136,29 +135,40 @@ export const sendOTPEmail = async (email, otp) => {
   </body>
   </html>
 `,
-    },
-    { headers }
-  );
+
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("OTP Email sent successfully");
+  } catch (error) {
+    console.error("Brevo Error:", error.response?.body || error.message);
+    throw new Error("Email sending failed");
+  }
 };
 
+
+// ✅ SEND WELCOME EMAIL
 export const sendWelcomeEmail = async (email) => {
-  await axios.post(
-    BREVO_API_URL,
-    {
-      sender: {
-        name: "AI Resume Builder",
-        email: "yashpaithane2004@gmail.com",
-      },
-      to: [{ email }],
-      subject: "Welcome to AI Resume Builder 🎉",
-      htmlContent: `
-        <div style="font-family: Arial; padding: 20px;">
-          <h2>Welcome 🎉</h2>
-          <p>Your account has been successfully verified.</p>
-          <p>You can now build your professional resume.</p>
-        </div>
-      `,
-    },
-    { headers }
-  );
+  try {
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+    sendSmtpEmail.to = [{ email }];
+    sendSmtpEmail.sender = {
+      email: "yashpaithane2004@gmail.com",
+      name: "AI Resume Builder",
+    };
+
+    sendSmtpEmail.subject = "Welcome 🎉";
+
+    sendSmtpEmail.htmlContent = `
+      <h2>Welcome 🎉</h2>
+      <p>Your account has been verified successfully.</p>
+    `;
+
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("Welcome email sent");
+  } catch (error) {
+    console.error("Brevo Error:", error.response?.body || error.message);
+    throw new Error("Welcome email failed");
+  }
 };
