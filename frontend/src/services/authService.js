@@ -2,7 +2,7 @@ const API_URL = 'https://ai-powered-resume-builder-5uwq.onrender.com'; // backen
 
 export const authService = {
   login: async (email, password) => {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -17,7 +17,7 @@ export const authService = {
   },
 
   signup: async (email, password) => {
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -32,7 +32,7 @@ export const authService = {
   },
 
   verifyToken: async (token) => {
-    const response = await fetch(`${API_URL}/verify`, {
+    const response = await fetch(`${API_URL}/api/auth/verify`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -49,7 +49,7 @@ export const authService = {
   },
 
   verifyOTP: async (email, otp) => {
-  const response = await fetch(`${API_URL}/verify-otp`, {
+  const response = await fetch(`${API_URL}/api/auth/verify-otp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, otp }),
