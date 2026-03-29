@@ -64,10 +64,34 @@ const careerAnalysisSchema = {
 
 export const analyzeResume = async (resumeFile) => {
   const promptText = `
-Act as an expert career coach and professional resume reviewer with ATS experience.
-Return JSON strictly following the provided schema.
-`;
+You are an advanced ATS (Applicant Tracking System) and professional resume evaluator.
 
+Analyze the provided resume and score it based on real-world ATS systems used by top companies.
+
+Scoring guidelines:
+- 90–100: Excellent, highly optimized, ready for top companies
+- 75–89: Strong resume with minor improvements needed
+- 50–74: Average resume, needs improvements
+- 0–49: Poor resume, major issues
+
+Evaluation criteria:
+1. Clarity and readability
+2. Impact of achievements (quantified results, metrics)
+3. Use of strong action verbs
+4. Keyword optimization for ATS systems
+5. Conciseness and formatting
+
+IMPORTANT:
+- DO NOT give extremely low scores unless resume is actually poor
+- A professional resume should score between 70–90
+- Be realistic and fair
+
+Return ONLY JSON strictly following the schema.
+
+Also:
+- Provide meaningful actionableInsights (not generic)
+- Extract relevant ATS keywords from the resume
+`;
   try {
     const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash',
