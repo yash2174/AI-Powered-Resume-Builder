@@ -1,7 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const analyzeResume = async (fileData) => {
-  const response = await fetch(`${API_BASE_URL}/resume`, {
+  const response = await fetch(`${API_BASE_URL}/api/ai/resume`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +18,7 @@ export const analyzeResume = async (fileData) => {
 };
 
 export const analyzeCareerPath = async (fileData) => {
-  const response = await fetch(`${API_BASE_URL}/career`, {
+  const response = await fetch(`${API_BASE_URL}/api/ai/career`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
