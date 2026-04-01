@@ -16,11 +16,27 @@ export const register = async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        message: "User with this email already exists.",
-      });
-    }
+
+if (existingUser) {
+  if (!existingUser.isVerified) {
+    
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    existingUser.otp = otp;
+    existingUser.otpExpires = Date.now() + 10 * 60 * 1000;
+
+    await existingUser.save();
+    await sendOTPEmail(email, otp);
+
+    return res.json({
+      message: "User exists but not verified. OTP resent."
+    });
+  }
+
+  return res.status(400).json({
+    message: "User with this email already exists.",
+  });
+}
 
     // STRICT PASSWORD CHECK
     const passwordRegex =
