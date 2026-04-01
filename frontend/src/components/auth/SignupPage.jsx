@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import toast from 'react-hot-toast';
@@ -317,9 +317,11 @@ const SignupPage = () => {
                       className="w-full px-4 py-4 border border-gray-200 rounded-xl text-center text-2xl font-black tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                       value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                     />
-                   {canResend
-                  ? "OTP expired. You can resend now."
+                   <p className="text-xs text-gray-400 text-center mt-2">
+                  {canResend
+                ? "OTP expired. You can resend now."
                  : `Resend OTP in ${formatTime(timer)}`}
+                  </p>
                   </div>
 
                   <button type="submit" disabled={isLoading || otp.length < 6}
