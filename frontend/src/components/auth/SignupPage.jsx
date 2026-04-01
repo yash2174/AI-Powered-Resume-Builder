@@ -14,6 +14,23 @@ const SignupPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
+  const [timer, setTimer] = useState(600);
+  const [canResend, setCanResend] = useState(false);
+
+  useEffect(() => {
+  if (!otpStep) return;
+
+  if (timer === 0) {
+    setCanResend(true);
+    return;
+  }
+
+  const interval = setInterval(() => {
+    setTimer((prev) => prev - 1);
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [timer, otpStep]);
 
   const getStrength = () => {
     if (!password) return null;
@@ -59,7 +76,27 @@ const SignupPage = () => {
     } finally {
       setIsLoading(false);
     }
+
   };
+  const handleResendOTP = async () => {
+  try {
+    setIsLoading(true);
+    await authService.signup(email, password);
+    toast.success("OTP resent");
+
+    setTimer(600);
+    setCanResend(false);
+  } catch (err) {
+    toast.error(err.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
+  const formatTime = (sec) => {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${s < 10 ? '0' : ''}${s}`;
+};
 
   return (
     <div className="min-h-screen flex">
@@ -280,7 +317,9 @@ const SignupPage = () => {
                       className="w-full px-4 py-4 border border-gray-200 rounded-xl text-center text-2xl font-black tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                       value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                     />
-                    <p className="text-xs text-gray-400 text-center mt-2">OTP expires in 10 minutes</p>
+                   {canResend
+                  ? "OTP expired. You can resend now."
+                 : `Resend OTP in ${formatTime(timer)}`}
                   </div>
 
                   <button type="submit" disabled={isLoading || otp.length < 6}
@@ -295,6 +334,13 @@ const SignupPage = () => {
                       </>
                     ) : 'Verify & Continue'}
                   </button>
+                  <button
+                          type="button"
+                          onClick={handleResendOTP}
+                               disabled={!canResend || isLoading}
+                                            >
+                          Resend OTP
+                          </button>
 
                   <button type="button" onClick={() => setOtpStep(false)}
                     className="w-full text-sm text-gray-400 hover:text-gray-600 transition py-2">
