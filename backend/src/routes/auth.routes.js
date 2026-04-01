@@ -9,6 +9,6 @@ router.post('/register', register);
 router.post('/login', login);
 router.get('/verify', authMiddleware, verify);
 router.post('/verify-otp', verifyOTP);
-
+router.post('/resend-otp', resendOTP);
 
 export default router;

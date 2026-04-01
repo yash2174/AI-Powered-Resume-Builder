@@ -81,7 +81,7 @@ const SignupPage = () => {
   const handleResendOTP = async () => {
   try {
     setIsLoading(true);
-    await authService.signup(email, password);
+    await authService.resendOTP(email);
     toast.success("OTP resent");
 
     setTimer(600);

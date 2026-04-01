@@ -133,3 +133,33 @@ export const verifyOTP = async (req, res) => {
     res.status(500).json({ message: 'OTP verification failed.' });
   }
 };
+
+export const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: "User already verified" });
+    }
+
+    // generate new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.otp = otp;
+    user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 min
+    await user.save();
+
+    await sendOTPEmail(email, otp);
+
+    res.json({ message: "OTP resent successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to resend OTP" });
+  }
+};
